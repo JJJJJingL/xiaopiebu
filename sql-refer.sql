@@ -54,6 +54,30 @@ WHERE 3 > (select count(distinct(e2.Salary))
                   and e1.DepartmentId = e2.DepartmentId)
 
 
+			
+##### rank_over 			
+# Write your MySQL query statement below
+#SELECT C.customer_id, O.product_id, O.product_name
+# Write an SQL query to find the most frequently ordered product(s) for each customer.
+
+SELECT RES.customer_id, RES.product_id, RES.product_name
+FROM (
+    SELECT O.customer_id, O.product_id, p.product_name,
+    # ADD ONE COLUMN FOR RANK 
+            RANK() OVER (PARTITION BY 
+                            O.customer_id 
+                         ORDER BY 
+                            COUNT(O.product_id) DESC) PROD_RANK
+    FROM Orders O
+    LEFT JOIN Products P
+    ON O.product_id = P.product_id
+    GROUP BY O.customer_id, O.product_id ) RES
+WHERE RES.PROD_RANK = 1
+			
+			
+			
+			
+			
 ####
 Department Highest Salary
 
